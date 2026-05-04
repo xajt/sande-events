@@ -22,10 +22,10 @@ const galleryItems: GalleryItem[] = [
   {
     id: 1,
     category: "compleanni",
-    title: "Compleanno Ciliegia",
+    title: "Festa tema Toy Story",
     gradient: "from-red-400 to-pink-500",
-    emoji: "🍒",
-    description: "Palloncini a forma di ciliegia in rosso, bianco e rosa",
+    emoji: "🤠",
+    description: "Decorazioni a tema Toy Story con palloncini colorati e personaggi",
     image: "/images/gallery/disco.jpeg",
   },
   {
@@ -54,15 +54,6 @@ const galleryItems: GalleryItem[] = [
     emoji: "💐",
     description: "Bouquet di palloncini floreali in cesto azzurro con fiocco rosa",
     image: "/images/gallery/cuore.jpeg",
-  },
-  {
-    id: 5,
-    category: "compleanni",
-    title: "Fiore in Giardino",
-    gradient: "from-pink-300 to-fuchsia-400",
-    emoji: "🌺",
-    description: "Scultura floreale con orsetto rosa al tramonto nel giardino",
-    image: "/images/gallery/flamingo.jpeg",
   },
   {
     id: 6,

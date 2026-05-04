@@ -203,7 +203,7 @@ export default function Contact() {
     {
       icon: MapPin,
       label: "Posizione",
-      value: "Tutta Italia",
+      value: "Varese, Como, Canton Ticino",
       href: "#",
       color: "from-teal-500 to-cyan-500",
     },
@@ -304,7 +304,9 @@ export default function Contact() {
                 </div>
                 <div className="flex justify-center gap-4">
                   <motion.a
-                    href="#"
+                    href="https://www.instagram.com/sande.events"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white shadow-lg hover:shadow-xl transition-shadow"
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.95 }}

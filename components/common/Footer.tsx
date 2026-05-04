@@ -50,7 +50,9 @@ export default function Footer() {
             <h3 className="font-display font-semibold mb-4">Seguici</h3>
             <div className="flex gap-4">
               <a
-                href="#"
+                href="https://www.instagram.com/sande.events"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-white/30 transition-colors"
               >
                 <Instagram className="w-5 h-5" />
