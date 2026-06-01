@@ -56,6 +56,15 @@ const galleryItems: GalleryItem[] = [
     image: "/images/gallery/cuore.jpeg",
   },
   {
+    id: 5,
+    category: "compleanni",
+    title: "",
+    gradient: "from-pink-300 to-fuchsia-400",
+    emoji: "🌺",
+    description: "Scultura floreale con orsetto rosa al tramonto nel giardino",
+    image: "/images/gallery/flamingo.jpeg",
+  },
+  {
     id: 6,
     category: "compleanni",
     title: "Compleanno 9 Anni",
@@ -185,7 +194,7 @@ function GalleryItem({ item, index, filterKey, onClick }: GalleryItemProps) {
       className="group relative"
     >
       <div
-        className={`relative h-72 rounded-2xl overflow-hidden cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-300 ${hasImage ? "bg-white" : `bg-gradient-to-br ${item.gradient}`}`}
+        className={`relative aspect-square sm:h-72 rounded-none sm:rounded-2xl overflow-hidden cursor-pointer shadow-none sm:shadow-lg hover:shadow-xl transition-all duration-300 ${hasImage ? "bg-white" : `bg-gradient-to-br ${item.gradient}`}`}
         onClick={onClick}
       >
         {hasImage ? (
@@ -213,15 +222,15 @@ function GalleryItem({ item, index, filterKey, onClick }: GalleryItemProps) {
           <ZoomIn className="w-12 h-12 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         </div>
 
-        {/* Category Badge */}
-        <div className="absolute top-4 left-4">
+        {/* Category Badge — hidden on mobile */}
+        <div className="hidden sm:block absolute top-4 left-4">
           <span className="inline-flex items-center px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full text-xs font-medium text-foreground">
             {categories.find((c) => c.id === item.category)?.label}
           </span>
         </div>
 
-        {/* Title */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/60 to-transparent">
+        {/* Title — hidden on mobile for clean Instagram look */}
+        <div className="hidden sm:block absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/60 to-transparent">
           <h3 className="font-display text-lg font-bold text-white">{item.title}</h3>
           <p className="text-white/80 text-sm">{item.description}</p>
         </div>
@@ -461,8 +470,8 @@ export default function Gallery() {
           ))}
         </motion.div>
 
-        {/* Masonry Grid */}
-        <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+        {/* Masonry Grid — Instagram-style on mobile (3 cols, square) */}
+        <motion.div layout className="grid grid-cols-3 sm:grid-cols-2 lg:grid-cols-3 gap-1 sm:gap-6 max-w-6xl mx-auto">
           <AnimatePresence mode="popLayout">
             {filteredItems.map((item, index) => (
               <GalleryItem
