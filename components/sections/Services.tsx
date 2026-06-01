@@ -122,23 +122,6 @@ export default function Services() {
           </p>
         </motion.div>
 
-        {/* Occasion Tags */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="flex flex-wrap justify-center gap-3 mb-16"
-        >
-          {occasions.map((occasion) => (
-            <span
-              key={occasion}
-              className="inline-flex items-center px-4 py-2 bg-white rounded-full shadow-sm border border-pink-200 text-sm font-medium text-foreground hover:bg-pink-50 hover:border-pink-300 transition-colors cursor-default"
-            >
-              {occasion}
-            </span>
-          ))}
-        </motion.div>
-
         {/* Theme Cards Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10 max-w-6xl mx-auto">
           {themes.map((theme, index) => (
