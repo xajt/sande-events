@@ -7,10 +7,21 @@ import {
 } from "@/lib/email-templates";
 import { checkRateLimit } from "@/lib/rate-limit";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 const NOTIFICATION_EMAIL = process.env.NOTIFICATION_EMAIL ?? "sandeevents8@gmail.com";
 const SENDER_EMAIL = process.env.RESEND_SENDER_EMAIL ?? "onboarding@resend.dev";
+
+let _resend: Resend | null = null;
+
+function getResendClient(): Resend {
+  if (!_resend) {
+    const apiKey = process.env.RESEND_API_KEY;
+    if (!apiKey || apiKey === "re_xxxxx") {
+      throw new Error("RESEND_API_KEY is not configured");
+    }
+    _resend = new Resend(apiKey);
+  }
+  return _resend;
+}
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   const clientIp =
@@ -56,6 +67,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const data = result.data;
 
   try {
+    const resend = getResendClient();
     const { error: resendError } = await resend.emails.send({
       from: `Sande Events <${SENDER_EMAIL}>`,
       to: [NOTIFICATION_EMAIL],
