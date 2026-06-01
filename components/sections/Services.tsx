@@ -90,35 +90,7 @@ export default function Services() {
 
   const [selectedTheme, setSelectedTheme] = useState<Theme | null>(null);
 
-  const themes = [
-    {
-      name: "Avventura Pirata",
-      description: "Vele piratesche, forzieri con tesori, palloncini stile Jolly Roger. Perfetto per piccoli scopritori!",
-      icon: Shield,
-      colors: "from-amber-600 to-orange-700",
-      accent: "amber",
-      occasions: ["compleanno", "feste a tema"],
-      image: "/images/pirate.png",
-    },
-    {
-      name: "Arcobaleno Magico",
-      description: "Unicorno, palloncini arcobaleno, nuvole e stelline. Decorazione magica per la tua piccola principessa!",
-      icon: Sparkles,
-      colors: "from-pink-400 to-purple-500",
-      accent: "pink",
-      occasions: ["compleanno", "baby shower"],
-      image: "/images/unicorn.png",
-    },
-    {
-      name: "Safari Giungla",
-      description: "Palme verdi, motivi animali, palloncini insetti. Un'avventura esotica a casa tua!",
-      icon: Trees,
-      colors: "from-green-500 to-emerald-600",
-      accent: "green",
-      occasions: ["compleanno", "battesimo"],
-      image: "/images/jungle.png",
-    },
-  ];
+  const themes: Theme[] = [];
 
   const occasions = [
     "Compleanno",

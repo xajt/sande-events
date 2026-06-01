@@ -42,6 +42,7 @@ export default function Contact() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   // Form validation state
   const [errors, setErrors] = useState<Partial<Record<keyof typeof formData, string>>>({});
@@ -100,26 +101,56 @@ export default function Contact() {
     }
 
     setIsSubmitting(true);
+    setSubmitError(null);
 
-    // Simulate form submission (replace with actual API call)
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-
-    setIsSubmitting(false);
-    setSubmitted(true);
-    setErrors({});
-
-    // Reset form after 3 seconds
-    setTimeout(() => {
-      setSubmitted(false);
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        occasion: "",
-        date: "",
-        message: "",
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
       });
-    }, 3000);
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        const serverErrors = result.errors as Array<{ field: string; message: string }> | undefined;
+        if (serverErrors && serverErrors.length > 0) {
+          const fieldErrors: Partial<Record<keyof typeof formData, string>> = {};
+          for (const err of serverErrors) {
+            const field = err.field as keyof typeof formData;
+            if (field) {
+              fieldErrors[field] = err.message;
+            }
+          }
+          setErrors(fieldErrors);
+          setShake(true);
+          setTimeout(() => setShake(false), 500);
+        } else {
+          setSubmitError(result.error || "Errore nell'invio. Riprova più tardi.");
+        }
+        setIsSubmitting(false);
+        return;
+      }
+
+      setIsSubmitting(false);
+      setSubmitted(true);
+      setErrors({});
+
+      setTimeout(() => {
+        setSubmitted(false);
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          occasion: "",
+          date: "",
+          message: "",
+        });
+      }, 3000);
+    } catch {
+      setIsSubmitting(false);
+      setSubmitError("Errore di connessione. Verifica la tua rete e riprova.");
+    }
   };
 
   const handleChange = (
@@ -139,50 +170,16 @@ export default function Contact() {
   };
 
   /**
-   * REACT-HOOK-FORM IMPLEMENTATION (ready to use after installing dependencies)
-   * ============================================================================
-   * Replace the useState-based form management with this code:
+   * REACT-HOOK-FORM UPGRADE (optional future improvement)
+   * ======================================================
+   * For enhanced validation UX, replace useState-based form with react-hook-form:
    *
-   * ```tsx
-   * const {
-   *   register,
-   *   handleSubmit: handleRhfSubmit,
-   *   formState: { errors, isSubmitting },
-   *   setError,
-   * } = useForm<ContactFormData>({
-   *   resolver: zodResolver(contactFormSchema),
-   *   mode: "onBlur", // Validate on field blur
-   * });
+   * import { useForm } from "react-hook-form";
+   * import { zodResolver } from "@hookform/resolvers/zod";
+   * import { contactFormSchema } from "@/lib/validation";
    *
-   * const [submitted, setSubmitted] = useState(false);
-   * const [shake, setShake] = useState(false);
-   *
-   * const onSubmit = async (data: ContactFormData) => {
-   *   try {
-   *     // Simulate API call
-   *     await new Promise((resolve) => setTimeout(resolve, 1500));
-   *
-   *     setSubmitted(true);
-   *
-   *     // Reset form after 3 seconds
-   *     setTimeout(() => {
-   *       setSubmitted(false);
-   *       // reset() - call react-hook-form's reset
-   *     }, 3000);
-   *   } catch (error) {
-   *     setError("root", {
-   *       type: "manual",
-   *       message: "Wystąpił błąd podczas wysyłania formularza. Spróbuj ponownie.",
-   *     });
-   *   }
-   * };
-   *
-   * // In the form, replace onSubmit={handleSubmit} with:
-   * // onSubmit={handleRhfSubmit(onSubmit)}
-   *
-   * // Replace all value/onChange props with:
-   * // {...register("name")}
-   * ```
+   * Then replace value/onChange with {...register("fieldName")}
+   * and onSubmit={handleSubmit} with onSubmit={handleRhfSubmit(onSubmit)}
    */
 
   const contactInfo = [
@@ -415,7 +412,7 @@ export default function Contact() {
                           htmlFor="phone"
                           className="block font-body text-sm font-medium text-foreground mb-2"
                         >
-                          Telefon
+                          Telefono
                         </label>
                         <Input
                           id="phone"
@@ -512,6 +509,18 @@ export default function Contact() {
                         )}
                       </div>
                     </div>
+
+                    {/* Server Error */}
+                    {submitError && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="bg-red-50 border border-red-200 rounded-2xl p-4 flex items-center gap-3"
+                      >
+                        <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
+                        <p className="text-red-700 text-sm">{submitError}</p>
+                      </motion.div>
+                    )}
 
                     {/* Submit Button */}
                     <Button

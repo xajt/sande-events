@@ -1,56 +1,56 @@
-/**
- * VALIDATION DEPENDENCIES REQUIRED
- * ================================
- * Install these packages before using this file:
- *
- * npm install zod react-hook-form @hookform/resolvers
- *
- * Or with pnpm:
- * pnpm add zod react-hook-form @hookform/resolvers
- */
-
 import { z } from "zod";
 
 /**
  * Contact form validation schema
  *
- * Polish language validation messages for the Sande Events contact form
+ * Italian language validation messages for the Sande Events contact form
  */
+
+const OCCASIONS = [
+  "Compleanno",
+  "Baby Shower",
+  "Battesimo",
+  "Cresima",
+  "Evento Aziendale",
+  "Altro",
+] as const;
+
+export { OCCASIONS };
+
 export const contactFormSchema = z.object({
   name: z
     .string()
-    .min(3, "Imię musi mieć minimum 3 znaki")
-    .max(50, "Imię może mieć maksymalnie 50 znaków"),
+    .min(3, "Il nome deve avere almeno 3 caratteri")
+    .max(50, "Il nome può avere massimo 50 caratteri"),
 
   email: z
     .string()
-    .min(1, "Email jest wymagany")
-    .email("Nieprawidłowy adres email"),
+    .min(1, "L'email è richiesta")
+    .email("Indirizzo email non valido"),
 
   phone: z
     .string()
-    .regex(/^\+?[\d\s-]{9,15}$/, "Nieprawidłowy numer telefonu")
+    .regex(/^\+?[\d\s-]{9,15}$/, "Numero di telefono non valido")
     .optional()
     .or(z.literal("")),
 
   occasion: z
-    .string()
-    .min(1, "Wybierz rodzaj przyjęcia"),
+    .enum(OCCASIONS, { message: "Scegli il tipo di festa" }),
 
   date: z
     .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "Formato data non valido")
     .optional()
     .or(z.literal("")),
 
   message: z
     .string()
-    .min(10, "Wiadomość musi mieć minimum 10 znaków")
-    .max(500, "Maksymalnie 500 znaków"),
+    .min(10, "Il messaggio deve avere almeno 10 caratteri")
+    .max(500, "Massimo 500 caratteri"),
 });
 
 /**
  * Type inference from the schema
- * Use this type for form state and API requests
  */
 export type ContactFormData = z.infer<typeof contactFormSchema>;
 
@@ -58,16 +58,16 @@ export type ContactFormData = z.infer<typeof contactFormSchema>;
  * Validation error type
  */
 export type ValidationError = {
-  field: keyof ContactFormData;
+  field: string;
   message: string;
 };
 
 /**
  * Helper function to format Zod errors for display
  */
-export function formatZodErrors(error: z.ZodError<any>): ValidationError[] {
-  return error.issues.map((err) => ({
-    field: (err.path?.[0] as keyof ContactFormData) || 'name',
-    message: err.message,
+export function formatZodErrors(error: z.ZodError<ContactFormData>): ValidationError[] {
+  return error.issues.map((issue) => ({
+    field: (issue.path?.[0] as string) || "name",
+    message: issue.message,
   }));
 }
